@@ -396,7 +396,7 @@ hbs.registerPartials(partialpath)// configuring partial path
  app.use(express.static(publicdirectorypath)) // config public path 
 app.get('',(req,res) => { 
      res.render('index', { 
-         name : 'suraj',  
+         Title : 'This is a weather app',  
          age : 24        
                            
      })
@@ -404,8 +404,9 @@ app.get('',(req,res) => {
 
  app.get('/help',(req,res) => { // access index.hsb
     res.render('help', { // first arg is name of handler ie index 
-        name : 'This is a weather API',   // 2nd arg is object ie to make the page dynamic it contains value that view can access
-        age : 'Enter the location in weather link'          // in index.hsb instead of writting <h1> suraj</h1>
+        name : 'Suraj',   // 2nd arg is object ie to make the page dynamic it contains value that view can access
+        age : 'Enter the location in weather link' ,
+        Title : 'This is a weather app'         // in index.hsb instead of writting <h1> suraj</h1>
                           // we write <h1>{{ name }} <h1>
     })
 })
