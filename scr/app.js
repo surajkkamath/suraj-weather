@@ -275,7 +275,7 @@ app.get('',(req,res) => {
   // import geo and forcast code
   // copy the calling function of geo andforecast from weather-call.js of weather
 
-  const express = require('express')
+  /*const express = require('express')
   
  const path = require('path')
  const hbs = require('hbs') // we require it for partial
@@ -309,7 +309,7 @@ app.get('',(req,res) => {
      })
  })
 
- /*app.get('/product',(req,res) => { //to send json to the browser
+ /*app.get('/product',(req,res) => { //to send json to the browser    // not required
     if(!req.query.search){ // to make user to give search manditary
         return res.send({
             error: 'provide search '
@@ -320,7 +320,8 @@ app.get('',(req,res) => {
          product : [] // send empty json
      })    
  })*/
- app.get('/weather', (req,res) =>{ // to get the query string from browser ie to get the address searched for
+ 
+ /*app.get('/weather', (req,res) =>{ // to get the query string from browser ie to get the address searched for
      if(!req.query.address){ // setting address search as manditary
          return res.send({
              error : 'please enter location'
@@ -371,4 +372,106 @@ app.get('',(req,res) => {
     })
 })
  
-  app.listen(3000)
+  app.listen(3000)*/
+/******************************************************************************************************** */
+// to make heroku listen to port
+
+const express = require('express')
+  
+const path = require('path')
+const hbs = require('hbs') // we require it for partial
+
+const geocode = require('./util/geocode.js') // importing geocode file
+const forecast = require('./util/forecast.js') // importing forecast file
+const app = express()
+const port = process.env.PORT || 3000 // making the app to listen to heroku or local host
+const publicdirectorypath = path.join(__dirname, '../public')
+const viewpath = path.join(__dirname,'../templates/views') 
+const partialpath = path.join(__dirname,'../templates/partial') // parital dir path
+
+
+app.set('view engine', 'hbs')
+app.set('views',viewpath)
+hbs.registerPartials(partialpath)// configuring partial path 
+ app.use(express.static(publicdirectorypath)) // config public path 
+app.get('',(req,res) => { 
+     res.render('index', { 
+         name : 'suraj',  
+         age : 24        
+                           
+     })
+ })
+
+ app.get('/help',(req,res) => { // access index.hsb
+    res.render('help', { // first arg is name of handler ie index 
+        name : 'This is a weather API',   // 2nd arg is object ie to make the page dynamic it contains value that view can access
+        age : 'Enter the location in weather link'          // in index.hsb instead of writting <h1> suraj</h1>
+                          // we write <h1>{{ name }} <h1>
+    })
+})
+
+/*app.get('/product',(req,res) => { //to send json to the browser
+   if(!req.query.search){ // to make user to give search manditary
+       return res.send({
+           error: 'provide search '
+       })
+   } 
+   console.log(req.query)
+   res.send({
+        product : [] // send empty json
+    })    
+})*/
+app.get('/weather', (req,res) =>{ // to get the query string from browser ie to get the address searched for
+    if(!req.query.address){ // setting address search as manditary
+        return res.send({
+            error : 'please enter location'
+        })
+    }
+    geocode(req.query.address,(error,{lat,long,loc} = {})=>{ // we take address given in browser by query string
+                                                       // data is an object with lat long loc as property we have used destructure method over object
+                                                       // we have set default value if we give address which does not match then defaul value {} will display that is the geocode error msg
+       if(error)
+       {
+           return res.send({
+               error : 'cannot find the location'
+           })
+       }
+       forecast(lat,long,(error,fdata) =>{ // we have taken lat long as input from geocode
+           if(error)
+           {
+               return res.send({
+                   error : 'error in forecast'
+               })
+           }
+           res.send({
+               forecast : fdata,
+               location : loc, // we have taken lat long as input from geocode so need to display
+               address : req.query.address
+           })
+       })
+        })
+    
+})
+
+
+
+
+app.get('/help/*',(req,res) => { // we created a new 404.hsb page in view and passed the value of errormsg to it
+   res.render('404', { 
+       name : 'suraj',  
+       age : 24 ,       
+       errormsg : 'help error'                  
+   })
+})
+
+app.get('*',(req,res) => { //same as above
+   res.render('404', { 
+       name : 'suraj',  
+       age : 24 ,       
+       errormsg : 'error in this page'                  
+   })
+})
+
+ app.listen(port, () => {
+     console.log('Server' + port)
+ })

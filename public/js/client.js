@@ -47,7 +47,7 @@ response.json().then((data) =>{ // json is a function data we get here is parsed
 // here we place the output in users browser applet and not in developers tool
 
 
-const forminput = document.querySelector('form') 
+/*const forminput = document.querySelector('form') 
 const searchinput = document.querySelector('input') 
 
 const message1 = document.querySelector('#msg1') // taking input from <p> tag with its id name so we used #
@@ -76,5 +76,37 @@ response.json().then((data) =>{
         }
     })
 })
+})*/
+ /************************************************************************************************ */
+// Accessing the weather app by local host or heroku any 
+
+const forminput = document.querySelector('form') 
+const searchinput = document.querySelector('input') 
+
+const message1 = document.querySelector('#msg1') // taking input from <p> tag with its id name so we used #
+const message2 = document.querySelector('#msg2')
+
+// now that we used <p> tag index.hbs and taking its input we can now target its input value
+//message1.textContent='suraj' // textcontent is to change to text
+
+forminput.addEventListener('submit' ,(e) => { 
+    e.preventDefault()
+const location = searchinput.value 
+
+message1.textContent='loading' // just printing loading
+message2.textContent='' // printing nothing 
+
+fetch('/weather?address=' + location).then((response) =>{ // here we are making the app to be accessed by both heroku and localhost
+                                                        
+response.json().then((data) =>{ 
+        if(data.error)
+        {
+            message1.textContent=data.error // printing the error in <p> tag of user applet 
+        }
+        else{
+            message1.textContent=data.location
+            message2.textContent=data.forecast
+        }
+    })
 })
- 
+})
