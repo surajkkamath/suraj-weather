@@ -397,7 +397,7 @@ hbs.registerPartials(partialpath)// configuring partial path
 app.get('',(req,res) => { 
      res.render('index', { 
          Title : 'This is a weather app',  
-         age : 24        
+         name : 'Suraj'        
                            
      })
  })
