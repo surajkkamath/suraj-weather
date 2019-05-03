@@ -17,8 +17,8 @@ request({ url : url, json: true}, (error,response) => {
         callback('wrong input', undefined) 
     }
     else{
-        console.log(response.body.daily.data[0])
-        callback(undefined, 'it is currently ' + response.body.currently.temperature + ' degrees. Today'+'s highest temperature is ' + response.body.daily.dat[0].temperatureHigh + ' Today'+'s highest temperature is ' + response.body.daily.dat[0].temperatureHigh + ' There is a ' +  response.body.currently.precipProbability + ' % chances of rain')        
+       // console.log(response.body.daily.data[0])// to print what are the properties daily data has
+        callback(undefined, 'it is currently ' + response.body.currently.temperature + ' degrees. Today highest temperature was ' + response.body.daily.data[0].temperatureHigh + ' Today lowest temperature was ' + response.body.daily.data[0].temperatureLow + ' There is a ' +  response.body.currently.precipProbability + ' % chances of rain')        
                                                    
     }
     })
